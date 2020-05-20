@@ -1,0 +1,14 @@
+{
+  "name": "apploader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "apploader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nexe": "^3.3.2"
+  }
+}

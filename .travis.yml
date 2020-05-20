@@ -1,0 +1,29 @@
+os: linux
+dist: bionic
+language: nodejs
+
+git:
+  submodules: false
+  depth: 3
+
+before_install:
+
+install:
+  npm install
+
+before_script:
+
+script:
+  - make
+
+deploy:
+  provider: releases
+  api_key:
+    secure: ""
+  file: apploader
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  email: false

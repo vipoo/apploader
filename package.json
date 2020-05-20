@@ -10,5 +10,6 @@
   "license": "ISC",
   "devDependencies": {
     "nexe": "^3.3.2"
-  }
+  },
+  "engines" : { "node" : "12.15.0" }
 }

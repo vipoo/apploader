@@ -2,6 +2,9 @@ os: linux
 dist: bionic
 language: nodejs
 
+node_js:
+  - 12.15
+
 git:
   submodules: false
   depth: 3
@@ -19,7 +22,7 @@ script:
 deploy:
   provider: releases
   api_key:
-    secure: ""
+    secure: "puoNnGr1JCTUTsqi4ZyOIu7fxpHwSsi/GQ9yWPX/jw94MsqUCTWqnLGSAoBZLkD8T1MfDPA4Ys6LE1CqieHTGL9nvq4Wd7V2/BB2lTVo3HJmO1Opu5xOOQkK5xjw9Eb9lL01i6jvb//z4hb5QOVYzlEftzZv7OUJBxBBXXHKnhPkBfr8urWOCREN7B05DVlbiXmeB6JR0smRMO9c34fJ4IAUQ/A3L4nvagldoO+Qc5x9grtH99DQTS2+f0uRir6AdhJFZcellvihit1KJwMoU8fcct7evRAk3/aXQHlujhTQMBP6HONB3r8idk6mZfMaDg80wQPorFvdYb7fbiwzjDMJmla3ZvpOPgpS4QyxoNUZk2U/NAa+4au0HU98G4Y6tyavnRzLwtiSGZEFMCpriDSmGDwC8AIb5EUSL2Kw98/UzIeQgUQWErGZAvMevgD9UyZQUjGd+CWifMV8EoK7AZyORQV96qRqCOiX0Wi+Gy8VZGi3TdC76uozikDXuRbnUKhQAKI6zjMDc3wIb+PPhXxMGiXMAOfRFoDEHm2MxyvphjjRS5gOa4SqfGgFu76TDewiyeZZ9cCVZX/UIOzbn00fwTWk6ERwER6eo0mD2z2NHDsLusreaYqgahqG88EDIclAs6IIXNEwopetbCxIQ51Djr8cr8DifsS5VNu7ycI="
   file: apploader
   skip_cleanup: true
   on:

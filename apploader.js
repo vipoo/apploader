@@ -19,18 +19,43 @@ function exec(command) {
 
 }
 
+function convertBitmapByte(hits, index) {
+  let byte = 0
+  for(let i = 0; i < 8; i++) {
+    const hit = hits.some(x => x === index + i)
+    if (hit)
+      byte |= Math.pow(2, 7 - i)
+  }
+
+  return byte
+}
+
+function convertToBitmap(hits, dataLength) {
+  const length_ = parseInt(dataLength / 8)
+  const length = dataLength % 8 > 0 ? length_ + 1 : length_
+  const data = Buffer.alloc(length + 2)
+
+  for(let i = 0; i < length; i++) {
+    const byte = convertBitmapByte(hits, i * 8)
+    data[i + 2] = byte
+  }
+
+  data[0] = length & 255
+  data[1] = length >> 8
+  return data
+}
+
 async function main(...options) {
 
   const output = options.find(x => x.startsWith('-o'))
 
+  const pageAlign = options.find(x => x == '--page-align')
+
   options = options
     .filter(x => !x.startsWith('-o'))
+    .filter(x => !x.startsWith('--page-align'))
     .map(x => `"${x}"`)
-
     .join(' ')
-
-    console.log(options)
-    console.log(output)
 
   await exec(`z80asm -r=256 -o"${fileAt100}" -b ${options}`)
   await exec(`z80asm -r=512 -o"${fileAt200}" -b ${options}`)
@@ -47,25 +72,25 @@ async function main(...options) {
       hits.push(i - 1)
   }
 
-  const data = new ArrayBuffer(hits.length * 2)
-  const view = new DataView(data);
-
-  for(let i = 0; i < hits.length; i++) {
-    view.setInt16(i * 2, hits[i], true)
-  }
-
   const fileName = output.slice(2)
   const relocFileName = `/tmp/100.reloc`
 
-  fs.writeFileSync(relocFileName, Buffer.from(data))
+  const data = convertToBitmap(hits, data2.length)
 
-  fs.writeFileSync(loaderAsm, fs.readFileSync('loader.asm'))
+  fs.writeFileSync(relocFileName, data)
 
-  await exec(`z80asm -r=256 -o"${fileName}" -b "${loaderAsm}"`)
+  const x = path.join(__dirname, 'loader.asm')
+  fs.writeFileSync(loaderAsm, fs.readFileSync(x))
+
+  const defines = pageAlign ? "-DPAGEALIGN" : ""
+
+  await exec(`gpp --includemarker "; #include line: %, file:%" -n ${defines} -o /tmp/loader.asmpp ${loaderAsm}`)
+
+  await exec(`z80asm -r=256 -o"${fileName}" -b "/tmp/loader.asmpp"`)
 }
 
 main(...[...process.argv].slice(2)).catch(err => {
-  console.log(err.message)
+  console.log(err.stack)
   process.exit(1)
 })
 
